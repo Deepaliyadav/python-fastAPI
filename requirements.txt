@@ -4,5 +4,4 @@ requests
 starlette
 selenium
 typing
-io
 webdriver-manager
