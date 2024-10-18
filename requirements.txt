@@ -1,1 +1,4 @@
 fastapi[all]
+beautifulsoup4
+requests
+starlette
