@@ -48,7 +48,7 @@ def read_item(url: Optional[str] = None):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
     }
-    page = requests.get(url, headers=headers, verify=False)
+    page = requests.get(url, headers=headers, verify=True)
     soup = BeautifulSoup(page.text, 'html.parser')
     print(soup)
     scrape_page(soup)
