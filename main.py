@@ -57,7 +57,7 @@ def read_item(url: Optional[str] = None):
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
 
     service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    driver = webdriver.Chrome(service=service)
     driver.get(url)
     time.sleep(5)  # Adjust sleep time if necessary
     html = driver.page_source
@@ -66,27 +66,27 @@ def read_item(url: Optional[str] = None):
     # soup = BeautifulSoup(page.text, 'html.parser')
     # print(soup)
     # print(soup.prettify())
-
+    print('soup', soup)
     scrape_page(soup)
     print(rows)
 
-    output = io.StringIO()
-    writer = csv.writer(output)
-    writer.writerow(head)
+    # output = io.StringIO()
+    # writer = csv.writer(output)
+    # writer.writerow(head)
 
-    for row in rows:
-        writer.writerow(row)
+    # for row in rows:
+    #     writer.writerow(row)
         
-    # Reset the pointer of the IO object to the beginning
-    output.seek(0)
+    # # Reset the pointer of the IO object to the beginning
+    # output.seek(0)
     
-    # Send the CSV file as a response
-    response = StreamingResponse(output, media_type="text/csv")
-    response.headers["Content-Disposition"] = "attachment; filename=elections.csv"
-    driver.quit()
+    # # Send the CSV file as a response
+    # response = StreamingResponse(output, media_type="text/csv")
+    # response.headers["Content-Disposition"] = "attachment; filename=elections.csv"
+    # driver.quit()
     
-    return response
-    # return {"url": url, "columns": head, "rows": rows}
+    # return response
+    return {"url": url, "columns": head, "rows": rows}
 
 
 @app.get("/scrape")
