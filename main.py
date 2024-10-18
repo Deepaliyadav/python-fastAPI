@@ -45,8 +45,10 @@ def read_item(url: Optional[str] = None):
             for cell in th:
                 head.append(cell.get_text(strip=True))
             rows.append(arr)
-
-    page = requests.get(url, verify=False)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    }
+    page = requests.get(url, headers=headers, verify=False)
     soup = BeautifulSoup(page.text, 'html.parser')
     print(soup)
     scrape_page(soup)
