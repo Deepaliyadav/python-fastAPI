@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.options import Options
 import csv
 import requests
 import io
+import shutil
 import time
 
 from fastapi.responses import StreamingResponse
@@ -60,7 +61,7 @@ def read_item(url: Optional[str] = None):
     driver.get(url)
     time.sleep(5)  # Adjust sleep time if necessary
     html = driver.page_source
-    
+    print('ok', shutil.which("google-chrome"))
     soup = BeautifulSoup(html, 'html.parser')
     # soup = BeautifulSoup(page.text, 'html.parser')
     # print(soup)
