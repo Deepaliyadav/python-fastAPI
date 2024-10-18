@@ -29,6 +29,7 @@ def read_item(url: Optional[str] = None):
     rows = []
     def scrape_page(soup):
         rows_ele = soup.find_all('tr')
+        print('rows_ele', rows_ele)
         # print(s)
         for row in rows_ele:
             td = row.find_all('td')  # Find all <td> elements in the current row
