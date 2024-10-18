@@ -57,7 +57,7 @@ def read_item(url: Optional[str] = None):
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
 
     service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(url)
     time.sleep(5)  # Adjust sleep time if necessary
     html = driver.page_source
