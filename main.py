@@ -3,11 +3,11 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 import csv
 import requests
 import io
 import time
-
 
 from fastapi.responses import StreamingResponse
 from fastapi import FastAPI
@@ -50,9 +50,13 @@ def read_item(url: Optional[str] = None):
             for cell in th:
                 head.append(cell.get_text(strip=True))
             rows.append(arr)
-    
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+    chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+
     service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(url)
     time.sleep(5)  # Adjust sleep time if necessary
     html = driver.page_source
