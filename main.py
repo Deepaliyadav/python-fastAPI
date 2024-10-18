@@ -1,8 +1,15 @@
 from typing import Optional
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 import csv
 import requests
-from bs4 import BeautifulSoup
+import io
+import time
 
+
+from fastapi.responses import StreamingResponse
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -21,7 +28,6 @@ app.add_middleware(
 async def root():
     return {"message": "Hello World"}
 
-
 @app.get('/scrapegovt')
 def read_item(url: Optional[str] = None):
     # url = 'https://results.eci.gov.in/AcResultGenOct2024/ConstituencywiseS0769.htm'
@@ -29,7 +35,6 @@ def read_item(url: Optional[str] = None):
     rows = []
     def scrape_page(soup):
         rows_ele = soup.find_all('tr')
-        print('rows_ele', rows_ele)
         # print(s)
         for row in rows_ele:
             td = row.find_all('td')  # Find all <td> elements in the current row
@@ -45,18 +50,38 @@ def read_item(url: Optional[str] = None):
             for cell in th:
                 head.append(cell.get_text(strip=True))
             rows.append(arr)
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-    }
-    cookies = {
-    "your_cookie_name": "your_cookie_value"
-    }
-    page = requests.get(url, headers=headers, cookies=cookies, verify=True)
-    soup = BeautifulSoup(page.text, 'html.parser')
-    print(soup)
+    
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service)
+    driver.get(url)
+    time.sleep(5)  # Adjust sleep time if necessary
+    html = driver.page_source
+    
+    soup = BeautifulSoup(html, 'html.parser')
+    # soup = BeautifulSoup(page.text, 'html.parser')
+    # print(soup)
+    # print(soup.prettify())
+
     scrape_page(soup)
     print(rows)
-    return {"url": url, "columns": head, "rows": rows}
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(head)
+
+    for row in rows:
+        writer.writerow(row)
+        
+    # Reset the pointer of the IO object to the beginning
+    output.seek(0)
+    
+    # Send the CSV file as a response
+    response = StreamingResponse(output, media_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=elections.csv"
+    driver.quit()
+    
+    return response
+    # return {"url": url, "columns": head, "rows": rows}
 
 
 @app.get("/scrape")
@@ -110,17 +135,23 @@ def read_item(url: Optional[str] = None):
         # looking for the "Next →" HTML element in the new page
         next_li_element = soup.find('li', class_='next')
 
-    return {"url": url, "quotes": quotes}
+    output = io.StringIO()
+    writer = csv.writer(output)
+    
+    # Write some example rows (header and data)
+    writer.writerow(['Text', 'Author', 'Tags'])
+    for quote in quotes:
+        writer.writerow(quote.values())
+    
+    # Reset the pointer of the IO object to the beginning
+    output.seek(0)
+    
+    # Send the CSV file as a response
+    response = StreamingResponse(output, media_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=quotes.csv"
+    
+    return response
 
+    # return {"url": url, "quotes": quotes}
 
-    # csv_file = open('quotes.csv', 'w', encoding='utf-8', newline='')
-
-    # writer = csv.writer(csv_file)
-
-    # writer.writerow(['Text', 'Author', 'Tags'])
-
-    # for quote in quotes:
-    #     writer.writerow(quote.values())
-
-    # csv_file.close()
 
