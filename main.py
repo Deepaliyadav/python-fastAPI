@@ -48,6 +48,7 @@ def read_item(url: Optional[str] = None):
 
     page = requests.get(url, verify=False)
     soup = BeautifulSoup(page.text, 'html.parser')
+    print(soup)
     scrape_page(soup)
     print(rows)
     return {"url": url, "columns": head, "rows": rows}
