@@ -29,33 +29,14 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    head = []
-    rows = []
-    def scrape_page(soup):
-        rows_ele = soup.find_all('tr')
-        print('rows_ele', rows_ele)
-        for row in rows_ele:
-            td = row.find_all('td')  # Find all <td> elements in the current row
-            th = row.find_all('th')  # Find all <th> elements in the current row
-            arr = []
-            for index, cell in enumerate(td):
-                cell_text = cell.get_text(strip=True)
-                # Check if the text contains a date-like format (e.g., 8/8)
-                if '/' in cell_text and len(cell_text.split('/')) == 2:
-                    cell_text = f"'{cell_text}"  # Prepend apostrophe to prevent date conversion
-                arr.append(cell_text)
-
-            for cell in th:
-                head.append(cell.get_text(strip=True))
-            rows.append(arr)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    
+ 
     url = 'https://results.eci.gov.in/AcResultGenOct2024/partywisewinresult-834U08.htm'
     
     headers = {
         'User-Agent': 'curl/7.68.0'  # or the user agent used by curl
     }
-
+    
     response = requests.get(url, verify=False, headers = headers)
     # soup = BeautifulSoup(response.text, 'html.parser')
     
@@ -69,7 +50,7 @@ async def root():
     # # print(soup)
     # scrape_page(soup)
     # print(rows)
-    return {"message": "Hello World", "response": response}
+    return {"message": "Hello World", "response": response.text}
 
 @app.get('/scrapegovt') 
 def read_item(url: Optional[str] = None):
