@@ -33,7 +33,7 @@ async def root():
     rows = []
     def scrape_page(soup):
         rows_ele = soup.find_all('tr')
-        # print(s)
+        print('rows_ele', rows_ele)
         for row in rows_ele:
             td = row.find_all('td')  # Find all <td> elements in the current row
             th = row.find_all('th')  # Find all <th> elements in the current row
@@ -61,7 +61,9 @@ async def root():
     
     # soup = BeautifulSoup(response.text, verify=False,, 'html.parser')
     page = requests.get(url,  verify=False)
+    print('page', page)
     soup = BeautifulSoup(page.text, 'html.parser')
+    print('soup', soup)
     scrape_page(soup)
 
     # print(soup)
