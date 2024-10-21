@@ -38,11 +38,11 @@ async def root():
     }
     
     response = requests.get(url, verify=False, headers = headers)
-    # soup = BeautifulSoup(response.text, 'html.parser')
+    soup = BeautifulSoup(response.text, 'html.parser')
     
     # soup = BeautifulSoup(response.text, verify=False,, 'html.parser')
     # page = requests.get(url, verify=False)
-    # print('page', page)
+    print('page', soup)
     # soup = BeautifulSoup(page.text, 'html.parser')
     # print('soup', soup)
     # scrape_page(soup)
