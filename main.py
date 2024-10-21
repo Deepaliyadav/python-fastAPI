@@ -56,11 +56,11 @@ async def root():
         'User-Agent': 'curl/7.68.0'  # or the user agent used by curl
     }
 
-    # response = requests.get(url, verify=False, headers = headers)
+    response = requests.get(url, verify=False, headers = headers)
     # soup = BeautifulSoup(response.text, 'html.parser')
     
     # soup = BeautifulSoup(response.text, verify=False,, 'html.parser')
-    page = requests.get(url,  verify=False)
+    # page = requests.get(url, verify=False)
     # print('page', page)
     # soup = BeautifulSoup(page.text, 'html.parser')
     # print('soup', soup)
@@ -69,7 +69,7 @@ async def root():
     # # print(soup)
     # scrape_page(soup)
     # print(rows)
-    return {"message": "Hello World", "response": page.text}
+    return {"message": "Hello World", "response": response}
 
 @app.get('/scrapegovt') 
 def read_item(url: Optional[str] = None):
