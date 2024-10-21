@@ -9,6 +9,8 @@ import requests
 import io
 import shutil
 import time
+import requests 
+import urllib3
 
 from fastapi.responses import StreamingResponse
 from fastapi import FastAPI
@@ -27,7 +29,17 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    
+    url = 'https://results.eci.gov.in/AcResultGenOct2024/partywisewinresult-834U08.htm'
+    
+    headers = {
+        'User-Agent': 'curl/7.68.0'  # or the user agent used by curl
+    }
+    
+    response = requests.get(url, verify=False, headers = headers)
+    print(response.text)
+    return {"message": "Hello World", "response": response.text}
 
 @app.get('/scrapegovt') 
 def read_item(url: Optional[str] = None):
@@ -53,9 +65,9 @@ def read_item(url: Optional[str] = None):
             rows.append(arr)
 
     chrome_options = Options()
-    chrome_options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    # chrome_options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
-    chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+    # chrome_options.add_argument("--headless")  # Run Chrome in headless mode
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--remote-debugging-port=9222")
