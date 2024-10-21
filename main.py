@@ -29,7 +29,7 @@ app.add_middleware(
 async def root():
     return {"message": "Hello World"}
 
-@app.get('/scrapegovt')
+@app.get('/scrapegovt') 
 def read_item(url: Optional[str] = None):
     # url = 'https://results.eci.gov.in/AcResultGenOct2024/ConstituencywiseS0769.htm'
     head = []
@@ -61,18 +61,16 @@ def read_item(url: Optional[str] = None):
     chrome_options.add_argument("--remote-debugging-port=9222") 
 
     service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    driver = webdriver.Chrome(service=service)
     driver.get(url)
     time.sleep(5)  # Adjust sleep time if necessary
     html = driver.page_source
     print('ok', shutil.which("google-chrome"))
     soup = BeautifulSoup(html, 'html.parser')
-    # soup = BeautifulSoup(page.text, 'html.parser')
-    # print(soup)
-    # print(soup.prettify())
     print('soup', soup)
     scrape_page(soup)
-    print(rows)
+    # print(rows)
+    driver.quit()
 
     # output = io.StringIO()
     # writer = csv.writer(output)
@@ -87,7 +85,6 @@ def read_item(url: Optional[str] = None):
     # # Send the CSV file as a response
     # response = StreamingResponse(output, media_type="text/csv")
     # response.headers["Content-Disposition"] = "attachment; filename=elections.csv"
-    # driver.quit()
     
     # return response
     return {"url": url, "columns": head, "rows": rows}
