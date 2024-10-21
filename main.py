@@ -69,7 +69,7 @@ async def root():
     # print(soup)
     scrape_page(soup)
     print(rows)
-    return {"message": "Hello World", "response": rows}
+    return {"message": "Hello World", "response": page.text}
 
 @app.get('/scrapegovt') 
 def read_item(url: Optional[str] = None):
