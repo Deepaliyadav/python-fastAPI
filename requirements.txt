@@ -1,7 +1,7 @@
 fastapi[all]
-beautifulsoup4
-requests
-starlette
-selenium
+beautifulsoup4==4.12.3
+requests==2.32.3
+starlette==0.41.0
+selenium==4.25.0
 typing
-webdriver-manager
+webdriver-manager==4.0.2

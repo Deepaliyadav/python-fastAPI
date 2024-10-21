@@ -57,11 +57,11 @@ def read_item(url: Optional[str] = None):
     chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
     chrome_options.add_argument("--headless")  # Run Chrome in headless mode
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
-    chrome_options.add_argument("--disable-gpu") 
-    chrome_options.add_argument("--remote-debugging-port=9222") 
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--remote-debugging-port=9222")
 
     service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(url)
     time.sleep(5)  # Adjust sleep time if necessary
     html = driver.page_source
@@ -70,7 +70,7 @@ def read_item(url: Optional[str] = None):
     print('soup', soup)
     scrape_page(soup)
     # print(rows)
-    driver.quit()
+    # driver.quit()
 
     # output = io.StringIO()
     # writer = csv.writer(output)

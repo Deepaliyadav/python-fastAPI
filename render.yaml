@@ -4,8 +4,7 @@ services:
     runtime: python
     plan: free
     autoDeploy: false
-    buildCommand: pip install -r requirements.txt
+    buildCommand: |
+      pip install -r requirements.txt
+      ./install_chrome.sh   # Run the script to install Chrome
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
-    build:
-      commands:
-        - ./install_chrome.sh
