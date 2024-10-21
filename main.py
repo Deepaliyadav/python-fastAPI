@@ -28,14 +28,14 @@ app.add_middleware(
 )
 
 @app.get("/")
-async def root():
+# def read_item(url: Optional[str] = None):
+async def root(url: Optional[str] = None):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
+    print(url)
     head = []
     rows = []
     def scrape_page(soup):
         rows_ele = soup.find_all('tr')
-        # print(s)
         for row in rows_ele:
             td = row.find_all('td')  # Find all <td> elements in the current row
             th = row.find_all('th')  # Find all <th> elements in the current row
@@ -51,7 +51,7 @@ async def root():
                 head.append(cell.get_text(strip=True))
             rows.append(arr)
 
-    url = 'https://results.eci.gov.in/AcResultGenOct2024/partywisewinresult-834U08.htm'
+    # url = 'https://results.eci.gov.in/AcResultGenOct2024/partywisewinresult-834U08.htm'
     
     headers = {
         'User-Agent': 'curl/7.68.0'  # or the user agent used by curl
@@ -59,14 +59,10 @@ async def root():
     
     response = requests.get(url, verify=False, headers = headers)
     soup = BeautifulSoup(response.text, 'html.parser')
-    print('page', soup)
-    # print('soup', soup)
+    # print('page', soup)
     scrape_page(soup)
 
-    # # print(soup)
-    # scrape_page(soup)
-    # print(rows)
-    return {"message": "Hello World", "head": head, "rows": rows,"response": response.text}
+    return {"message": "Hello World", "columns": head, "rows": rows}
 
 @app.get('/scrapegovt') 
 def read_item(url: Optional[str] = None):
