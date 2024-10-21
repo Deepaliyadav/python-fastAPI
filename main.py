@@ -61,14 +61,14 @@ async def root():
     
     # soup = BeautifulSoup(response.text, verify=False,, 'html.parser')
     page = requests.get(url,  verify=False)
-    print('page', page)
-    soup = BeautifulSoup(page.text, 'html.parser')
-    print('soup', soup)
-    scrape_page(soup)
+    # print('page', page)
+    # soup = BeautifulSoup(page.text, 'html.parser')
+    # print('soup', soup)
+    # scrape_page(soup)
 
-    # print(soup)
-    scrape_page(soup)
-    print(rows)
+    # # print(soup)
+    # scrape_page(soup)
+    # print(rows)
     return {"message": "Hello World", "response": page.text}
 
 @app.get('/scrapegovt') 
